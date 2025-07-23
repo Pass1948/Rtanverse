@@ -26,6 +26,7 @@ public class PlayerControl : MonoBehaviour
     [Header("플레이어 위치 오브젝트")]
     [SerializeField] Transform body;
     [SerializeField] Transform shadow;
+    [SerializeField] Transform rayPoint;
 
     [Header("Raycast길이")]
     [SerializeField] float rayLangth;
@@ -46,6 +47,7 @@ public class PlayerControl : MonoBehaviour
 
     private Vector3 dirVec;
 
+    GameObject scanOdj;
 
     private void Awake()
     {
@@ -61,6 +63,7 @@ public class PlayerControl : MonoBehaviour
     private void Update()
     {
         JumpHandling();
+   
     }
 
     //=======================[InputSystem]=======================
@@ -76,6 +79,15 @@ public class PlayerControl : MonoBehaviour
     void OnJump()
     {
         Jump(jumpPower);
+    }
+
+    void OnInteract()
+    {
+        Debug.Log($"이것은 {scanOdj.name}");
+        if (scanOdj = null)
+        {
+            Debug.Log($"이것은 없습니다");
+        }
     }
 
     //=======================[Move]=======================
@@ -153,8 +165,15 @@ public class PlayerControl : MonoBehaviour
     //=======================[Interaction RayCast]=======================
     void DrawRay()
     {
-        Debug.DrawRay(rd.position, dirVec * rayLangth, new Color(0, 1, 0));
-        RaycastHit2D rayHit = Physics2D.Raycast(rd.position, dirVec, rayLangth);
+        Debug.DrawRay(rayPoint.position, dirVec * rayLangth, new Color(0, 1, 0));
+        RaycastHit2D rayHit = Physics2D.Raycast(rayPoint.position, dirVec, rayLangth, LayerMask.GetMask("Object"));
+
+        if(rayHit.collider!=null)
+        {
+            scanOdj = rayHit.collider.gameObject;
+        }
+        else
+            scanOdj = null;
     }
 
 
