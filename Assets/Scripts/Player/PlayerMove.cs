@@ -36,6 +36,12 @@ public class PlayerMove : MonoBehaviour
     private Vector2 moveDir;
 
 
+
+    [SerializeField] float rayLangth;
+
+    private Vector3 dirVec;
+
+
     private void Awake()
     {
         rd = GetComponent<Rigidbody2D>();
@@ -44,6 +50,7 @@ public class PlayerMove : MonoBehaviour
     private void FixedUpdate()
     {
         Move();
+        DrawRay();
     }
 
     private void Update()
@@ -86,6 +93,35 @@ public class PlayerMove : MonoBehaviour
         moveDir.x = value.Get<Vector2>().x;
         moveDir.y = value.Get<Vector2>().y;
     }
+
+
+    void DrawRay()
+    {// 오른쪽
+        if (moveDir.x > 0)
+        {
+            dirVec = Vector3.right;
+        }
+        // 왼쪽
+        else if (moveDir.x < 0)
+        {
+            dirVec = Vector3.left;
+        }
+
+        //위쪽
+        if (moveDir.y > 0)
+        {
+            dirVec = Vector3.up;
+        }
+
+        //아래쪽
+        else if (moveDir.y < 0)
+        {
+            dirVec = Vector3.down;
+        }
+        Debug.DrawRay(rd.position, dirVec * rayLangth, new Color(0, 1, 0));
+    }
+
+
 
     void OnJump()
     {
