@@ -11,21 +11,15 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] Sprite bRender;
     [SerializeField] Sprite fRender;
 
-
     private Rigidbody2D rd;
     private Vector2 moveDir;
     SpriteRenderer spriteRenderer;
-
-
-    private Animator animator;
-
 
     private void Awake()
     {
         rd = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
-
 
     private void FixedUpdate()
     {
@@ -62,13 +56,9 @@ public class PlayerMove : MonoBehaviour
         }
     }
 
-
-
     void OnMove(InputValue value)
     {
         moveDir.x = value.Get<Vector2>().x;
         moveDir.y = value.Get<Vector2>().y;
     }
-
-
 }
