@@ -14,6 +14,9 @@ public class GameManager : MonoBehaviour
     private static ResourceManager resourceManager;
     public static ResourceManager Resource { get { return resourceManager; } }
 
+    private static SceneManager sceneManager;
+    public static SceneManager Scene { get { return sceneManager; } }
+
 
     private void Awake()
     {
@@ -40,5 +43,10 @@ public class GameManager : MonoBehaviour
         resourceObj.name = "ResourceManager";
         resourceObj.transform.parent = transform;
         resourceManager = resourceObj.AddComponent<ResourceManager>();
+
+        GameObject sceneObj = new GameObject();
+        sceneObj.name = "SceneManager";
+        sceneObj.transform.parent = transform;
+        sceneManager = sceneObj.AddComponent<SceneManager>();
     }
 }
