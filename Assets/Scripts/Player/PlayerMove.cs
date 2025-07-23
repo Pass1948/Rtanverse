@@ -12,6 +12,7 @@ public class PlayerMove : MonoBehaviour
     [Header("플레이어 점프")]
     [SerializeField] float jumpPower;
     [SerializeField] float gravity;
+    [SerializeField] int maxJumpCount;
 
     [Header("플레이어 이미지")]
     [SerializeField] SpriteRenderer spriteRenderer;
@@ -23,11 +24,15 @@ public class PlayerMove : MonoBehaviour
     [SerializeField] Transform body;
     [SerializeField] Transform shdow;
 
+    private int jumpCount = 0;
+
     private float curJumpP;
+    private float groundOffset = 0.0f;
+
     private bool isGround = true; // 점프 가능 상태
 
-    private float groundOffset = 0.0f;
     private Rigidbody2D rd;
+
     private Vector2 moveDir;
 
 
@@ -90,8 +95,10 @@ public class PlayerMove : MonoBehaviour
 
     void Jump(float jumpPower)
     {
-            curJumpP = jumpPower;
-            isGround = false;
+        if (jumpCount >= maxJumpCount) return;
+             curJumpP = jumpPower;
+             isGround = false;
+             jumpCount++;
     }
 
     void JumpHandling()
@@ -105,6 +112,7 @@ public class PlayerMove : MonoBehaviour
         if (body.transform.position.y <= shdow.position.y+ groundOffset&&curJumpP <= 0.0f)
         {
             isGround = true;
+            jumpCount = 0;
             body.transform.position = new Vector2(body.transform.position.x, shdow.position.y + groundOffset);
         }
     }
