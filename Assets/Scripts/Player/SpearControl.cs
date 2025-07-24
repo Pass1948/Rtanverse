@@ -22,9 +22,8 @@ public class SpearControl : MonoBehaviour
 
     //====[Dash]====
     bool isDashing = false;
+    bool canDash = true;
     float activeSpeed;
-
-
 
     //====[All]====
     private Rigidbody2D rd;
@@ -43,6 +42,7 @@ public class SpearControl : MonoBehaviour
     private void Start()
     {
         activeSpeed = speed;
+        canDash = true;
     }
 
     private void FixedUpdate()
@@ -113,17 +113,20 @@ public class SpearControl : MonoBehaviour
 
     void Dash()
     {
-        if (isDashing==true) { return; }
+        if (!canDash) { return; }
         isDashing = true;
         StartCoroutine(DashCorutine());
     }
 
     IEnumerator DashCorutine()
     {
+        canDash = false;
         speed = dashSpeed;
         yield return new WaitForSeconds(dashDuration);
         speed = activeSpeed;
         isDashing = false;
+        yield return new WaitForSeconds(dashCoolDown);
+        canDash = true;
     }
 
 
