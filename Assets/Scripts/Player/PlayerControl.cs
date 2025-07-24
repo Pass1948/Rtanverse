@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Resources;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -31,16 +32,16 @@ public class PlayerControl : MonoBehaviour
     [Header("Raycast길이")]
     [SerializeField] float rayLangth;
 
-
+    //====[Jump]====
     private int jumpCount = 0; // 점프 카운터
 
     private float curJumpP; // 점프 파워
     private float groundOffset = 0.0f;  // 바닥감지 기준수치
 
-
     private bool isMinSize = false;
     private bool isGround = true; // 점프 가능 상태
 
+    //====[All]====
     private Rigidbody2D rd;
 
     private Vector2 moveDir;
@@ -63,7 +64,6 @@ public class PlayerControl : MonoBehaviour
     private void Update()
     {
         JumpHandling();
-   
     }
 
     //=======================[InputSystem]=======================
@@ -90,6 +90,7 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
+
     //=======================[Move]=======================
     void Move()
     {
@@ -101,25 +102,28 @@ public class PlayerControl : MonoBehaviour
     // 플레이어 반향 전환 관련 로직
     void BodyDir()
     {
+        // 오른쪽
         if(moveDir.x > 0)
         {
             dirVec = Vector3.right;
             spriteRenderer.sprite = sRender;
             spriteRenderer.flipX = true;
         }
-        else if(moveDir.x < 0)
+        // 왼쪽
+        else if (moveDir.x < 0)
         {
             dirVec = Vector3.left;
             spriteRenderer.sprite = sRender;
             spriteRenderer.flipX = false;
         }
-
-        if(moveDir.y > 0)
+        // 위
+        if (moveDir.y > 0)
         {
             dirVec = Vector3.up;
             spriteRenderer.sprite = bRender;
         }
-        else if(moveDir.y < 0)
+        // 아래
+        else if (moveDir.y < 0)
         {
             dirVec = Vector3.down;
             spriteRenderer.sprite = fRender;
@@ -175,12 +179,5 @@ public class PlayerControl : MonoBehaviour
         else
             scanOdj = null;
     }
-
-
-
-
-
-
-
 
 }
