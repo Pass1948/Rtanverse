@@ -16,6 +16,11 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] float gravity;
     [SerializeField] int maxJumpCount;
 
+    [Header("플레이어 대시 세팅")]
+    [SerializeField] float dashSpeed;  //10f
+    [SerializeField] float dashDuration; // 1f
+    [SerializeField] float dashCoolDown; //1f
+
     [Header("플레이어 이미지")]
     [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] Sprite sRender;
@@ -32,6 +37,10 @@ public class PlayerControl : MonoBehaviour
     [Header("Raycast길이")]
     [SerializeField] float rayLangth;
 
+    [Header("버튼 UI")]
+    [SerializeField] GameObject buttenUI;
+
+
     //====[Jump]====
     private int jumpCount = 0; // 점프 카운터
 
@@ -40,6 +49,11 @@ public class PlayerControl : MonoBehaviour
 
     private bool isMinSize = false;
     private bool isGround = true; // 점프 가능 상태
+
+
+    //====[Dash]====
+    bool canDash = true;
+    float activeSpeed;
 
     //====[All]====
     private Rigidbody2D rd;
@@ -55,14 +69,19 @@ public class PlayerControl : MonoBehaviour
         rd = GetComponent<Rigidbody2D>();
     }
 
+    private void Start()
+    {
+        activeSpeed = speed;
+    }
+
     private void FixedUpdate()
     {
         Move();
-        DrawRay();
     }
 
     private void Update()
     {
+        DrawRay();
         JumpHandling();
     }
 
@@ -88,6 +107,11 @@ public class PlayerControl : MonoBehaviour
         {
             Debug.Log($"이것은 없습니다");
         }
+    }
+
+    void OnSprint()
+    {
+        Dash();
     }
 
 
@@ -167,18 +191,47 @@ public class PlayerControl : MonoBehaviour
     }
 
     //=======================[Interaction RayCast]=======================
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireSphere(rayPoint.position, rayLangth);
+    }
 
     void DrawRay()
     {
         Debug.DrawRay(rayPoint.position, dirVec * rayLangth, new Color(0, 1, 0));
         RaycastHit2D rayHit = Physics2D.Raycast(rayPoint.position, dirVec, rayLangth, LayerMask.GetMask("Object"));
 
-        if (rayHit.collider != null)
+        Collider2D hit = Physics2D.OverlapCircle(rayPoint.position, rayLangth, LayerMask.GetMask("Object"));
+
+        if (hit != null)
         {
-            scanOdj = rayHit.collider.gameObject;
+            scanOdj = hit.gameObject;
+            buttenUI.SetActive(true);
         }
         else
+        {
             scanOdj = null;
+            buttenUI.SetActive(false);
+        }
+
+    }
+    //=======================[Dash]=======================
+
+    void Dash()
+    {
+        if (!canDash) { return; }
+        StartCoroutine(DashCorutine());
+    }
+
+    IEnumerator DashCorutine()
+    {
+        canDash = false;
+        speed = dashSpeed;
+        yield return new WaitForSeconds(dashDuration);
+        speed = activeSpeed;
+        yield return new WaitForSeconds(dashCoolDown);
+        canDash = true;
     }
 
 }

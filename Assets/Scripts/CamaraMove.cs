@@ -12,6 +12,7 @@ public class CamaraMove : MonoBehaviour
 
     void Start()
     {
+         transform.position = new Vector3(player.position.x, player.position.y, -10);
         offset = transform.position - player.transform.position;
     }
 

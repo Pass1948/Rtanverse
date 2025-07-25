@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
     private static SceneManager sceneManager;
     public static SceneManager Scene { get { return sceneManager; } }
 
+    private static DataManager dataManager;
+    public static DataManager Data { get { return dataManager; } }
+
 
     private void Awake()
     {
@@ -48,5 +51,10 @@ public class GameManager : MonoBehaviour
         sceneObj.name = "SceneManager";
         sceneObj.transform.parent = transform;
         sceneManager = sceneObj.AddComponent<SceneManager>();
+
+        GameObject dataObj = new GameObject();
+        dataObj.name = "DataManager";
+        dataObj.transform.parent = transform;
+        dataManager = dataObj.AddComponent<DataManager>();
     }
 }

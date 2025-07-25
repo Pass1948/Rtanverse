@@ -5,8 +5,12 @@ using UnityEngine.InputSystem;
 
 public class SpearControl : MonoBehaviour
 {
+    [Header("플레이어 이동속도")]
+    [SerializeField] float speed;
+
     [Header("플레이어 이미지")]
     [SerializeField] SpriteRenderer spriteRenderer;
+    [SerializeField] Sprite sRender;
     [SerializeField] Sprite bRender;
     [SerializeField] Sprite fRender;
 
@@ -17,15 +21,16 @@ public class SpearControl : MonoBehaviour
     [SerializeField] float frictionDelay;
 
     [Header("플레이어 레이피어세팅")]
-    [SerializeField] Transform rapier;
+    [SerializeField] Transform frontPoint;
     [SerializeField] float angle = 135f;
+    [SerializeField] Collider2D repireTrigger;
 
     //====[Dash]====
     bool canDash = true;
 
     //====[All]====
     private Rigidbody2D rb;
-
+    private Vector2 moveDir;
     private Vector2 mouseDir;
     Vector2 aimDir;
 
@@ -41,6 +46,7 @@ public class SpearControl : MonoBehaviour
 
     private void FixedUpdate()
     {
+        Move();
         RepierHandling();
     }
 
@@ -52,8 +58,49 @@ public class SpearControl : MonoBehaviour
         MouseDash();
     }
 
+    void OnMove(InputValue value)
+    {
+        moveDir.x = value.Get<Vector2>().x;
+        moveDir.y = value.Get<Vector2>().y;
+    }
+
+    //=======================[Move]=======================
+    void Move()
+    {
+        if (!canDash) return;
+        moveDir.Normalize();
+        BodyDir();
+        rb.velocity = moveDir * speed;  // 플레이어 이동 함수(.velocity
+    }
+    // 플레이어 반향 전환 관련 로직
+    void BodyDir()
+    {
+        // 오른쪽
+        if (moveDir.x > 0)
+        {
+            spriteRenderer.sprite = sRender;
+            spriteRenderer.flipX = true;
+        }
+        // 왼쪽
+        else if (moveDir.x < 0)
+        {
+            spriteRenderer.sprite = sRender;
+            spriteRenderer.flipX = false;
+        }
+        // 위
+        if (moveDir.y > 0)
+        {
+            spriteRenderer.sprite = bRender;
+        }
+        // 아래
+        else if (moveDir.y < 0)
+        {
+            spriteRenderer.sprite = fRender;
+        }
+    }
 
     //=======================[Diraction]=======================
+
     void MouseDash()
     {
         if (!canDash) return;
@@ -65,20 +112,19 @@ public class SpearControl : MonoBehaviour
         mouseDir = Camera.main.ScreenToWorldPoint(Input.mousePosition);
          aimDir = (mouseDir - rb.position).normalized;
         float aimAngle = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg - angle;
-        rapier.transform.rotation = Quaternion.AngleAxis(aimAngle, Vector3.forward);
-        BodyDir();
+        frontPoint.transform.rotation = Quaternion.AngleAxis(aimAngle, Vector3.forward);
     }
 
     IEnumerator DashForceCoroutine()
     {
         canDash = false;
-
         // 기존 이동 끔
         Vector2 originalVelocity = rb.velocity;
         rb.velocity = Vector2.zero;
 
         // 힘을 가함
         rb.AddForce(aimDir * dashSpeed, ForceMode2D.Impulse);
+        repireTrigger.enabled = true;
         yield return new WaitForSeconds(dashDuration);
 
         // 마찰력 표현(미끄러짐)
@@ -87,19 +133,7 @@ public class SpearControl : MonoBehaviour
 
         // 기본 이동력 복원
         rb.velocity = originalVelocity;
+        repireTrigger.enabled = false;
         canDash = true;
-    }
-
-    // 플레이어 반향 전환 관련 로직
-    void BodyDir()
-    {
-        if (mouseDir.y > 0)
-        {
-            spriteRenderer.sprite = bRender;
-        }
-        else if (mouseDir.y < 0)
-        {
-            spriteRenderer.sprite = fRender;
-        }
     }
 }
