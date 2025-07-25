@@ -20,6 +20,4 @@ public class CamaraMove : MonoBehaviour
         targetPos = player.transform.position + offset;
         this.transform.position = Vector3.Lerp(transform.position, targetPos, followSpeed * Time.deltaTime); // Larp 두 물체사이의 거리를 주어진 수만큼 보간
     }
-
-
 }

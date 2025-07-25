@@ -103,7 +103,7 @@ public class PlayerControl : MonoBehaviour
     void BodyDir()
     {
         // ¿À¸¥ÂÊ
-        if(moveDir.x > 0)
+        if (moveDir.x > 0)
         {
             dirVec = Vector3.right;
             spriteRenderer.sprite = sRender;
@@ -134,28 +134,28 @@ public class PlayerControl : MonoBehaviour
     void Jump(float jumpPower)
     {
         if (jumpCount >= maxJumpCount) return;
-             curJumpP = jumpPower;
-             isGround = false;
-             jumpCount++;
+        curJumpP = jumpPower;
+        isGround = false;
+        jumpCount++;
     }
 
     void JumpHandling()
     {
-        if (isGround==true)
+        if (isGround == true)
             return;
 
-        body.transform.position += new Vector3 (0.0f, curJumpP * Time.deltaTime, 0.0f);
+        body.transform.position += new Vector3(0.0f, curJumpP * Time.deltaTime, 0.0f);
         curJumpP -= gravity * Time.deltaTime;
 
-        if (shadow.transform.localScale.x > shadowMinSize&& isMinSize==false || shadow.transform.localScale.y > shadowMinSize&& isMinSize== false)
-                shadow.transform.localScale -= new Vector3(shadowMinSize * Time.deltaTime, shadowMinSize * Time.deltaTime, 0.0f);
+        if (shadow.transform.localScale.x > shadowMinSize && isMinSize == false || shadow.transform.localScale.y > shadowMinSize && isMinSize == false)
+            shadow.transform.localScale -= new Vector3(shadowMinSize * Time.deltaTime, shadowMinSize * Time.deltaTime, 0.0f);
         else
         {
             isMinSize = true;
             shadow.transform.localScale += new Vector3(sizeSpeed * Time.deltaTime, sizeSpeed * Time.deltaTime, 0.0f);
         }
 
-        if (body.transform.position.y <= shadow.position.y+ groundOffset&&curJumpP <= 0.0f)
+        if (body.transform.position.y <= shadow.position.y + groundOffset && curJumpP <= 0.0f)
         {
             shadow.transform.localScale = new Vector3(1f, 1f, 0.0f);
             isMinSize = false;
@@ -167,12 +167,13 @@ public class PlayerControl : MonoBehaviour
     }
 
     //=======================[Interaction RayCast]=======================
+
     void DrawRay()
     {
         Debug.DrawRay(rayPoint.position, dirVec * rayLangth, new Color(0, 1, 0));
         RaycastHit2D rayHit = Physics2D.Raycast(rayPoint.position, dirVec, rayLangth, LayerMask.GetMask("Object"));
 
-        if(rayHit.collider!=null)
+        if (rayHit.collider != null)
         {
             scanOdj = rayHit.collider.gameObject;
         }

@@ -20,23 +20,27 @@ public class SpearControl : MonoBehaviour
     [SerializeField] float dashDuration; // 1f
     [SerializeField] float dashCoolDown; //1f
 
+    [Header("플레이어 레이피어세팅")]
+    [SerializeField] GameObject rapier;
+
     //====[Dash]====
     bool isDashing = false;
     bool canDash = true;
     float activeSpeed;
 
     //====[All]====
-    private Rigidbody2D rd;
+    private Rigidbody2D rb;
+    private Rigidbody2D rapieRb;
 
     private Vector2 moveDir;
 
-    private Vector3 MouseDir;
-
-    GameObject scanOdj;
+    private Vector2 mouseDir;
+    
 
     private void Awake()
     {
-        rd = GetComponent<Rigidbody2D>();
+        rb = GetComponent<Rigidbody2D>();
+        rapieRb = rapier.GetComponent<Rigidbody2D>();
     }
 
     private void Start()
@@ -52,7 +56,7 @@ public class SpearControl : MonoBehaviour
 
     private void Update()
     {
-  
+        mouseDir = Camera.main.ScreenToWorldPoint(Input.mousePosition);
     }
 
     //=======================[InputSystem]=======================
@@ -70,19 +74,17 @@ public class SpearControl : MonoBehaviour
         Dash();
     }
 
-
     void OnAttack()
     {
 
     }
-
 
     //=======================[Move]=======================
     void Move()
     {
         moveDir.Normalize();
         BodyDir();
-        rd.velocity = moveDir * speed;  // 플레이어 이동 함수(.velocity
+        rb.velocity = moveDir * speed;  // 플레이어 이동 함수(.velocity
     }
 
     // 플레이어 반향 전환 관련 로직
@@ -129,9 +131,11 @@ public class SpearControl : MonoBehaviour
         canDash = true;
     }
 
-
-
-
-
-
+    //=======================[Diraction]=======================
+    void MouseDir()
+    {
+        Vector2 aimDir = mouseDir - rapieRb.position;
+        float aimAngle = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg - 135f;
+        rapieRb.rotation = aimAngle;
+    }
 }
