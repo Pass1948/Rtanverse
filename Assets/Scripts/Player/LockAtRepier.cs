@@ -27,7 +27,7 @@ public class LockAtRepier : MonoBehaviour
     void LookTarget()
     {
         mouseDir = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 aimDir = mouseDir - rb.position;
+        Vector2 aimDir = (mouseDir - rb.position).normalized;
         float aimAngle = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg - angle;
         transform.rotation = Quaternion.AngleAxis(aimAngle, Vector3.forward);
     }
