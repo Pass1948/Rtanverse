@@ -9,6 +9,8 @@ TagManager:
   - Object
   - FencingCheckPoint
   - ReStartPoint
+  - Obstacles
+  - BackGround
   layers:
   - Default
   - TransparentFX
