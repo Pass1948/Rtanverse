@@ -11,6 +11,7 @@ public class MiniGameSelectUI : WindowUI
     {
         base.Awake();
         buttons["FencingGameButton"].onClick.AddListener(() => { FencingSelect(); });
+        buttons["FlappyBirdGameButton"].onClick.AddListener(() => { FencingSelect(); });
         buttons["BackButton"].onClick.AddListener(() => { Back(); });
     }
 
@@ -21,13 +22,16 @@ public class MiniGameSelectUI : WindowUI
 
     public void FencingSelect()
     {
-        Debug.Log("∆ÊΩÃ∞‘¿” º±≈√");
         StartCoroutine(FencingSelectLodingRountine());
+    }
+
+    public void FlappyBirdSelect()
+    {
+        StartCoroutine(FlappyBirdLodingRountine());
     }
 
     public void Back()
     {
-        Debug.Log("µ⁄∑Œ∞°±‚");
         StartCoroutine(UILodingRountine());
     }
 
@@ -42,6 +46,14 @@ public class MiniGameSelectUI : WindowUI
     {
         yield return new WaitForSeconds(0.3f);
         GameManager.UI.ShowWindowUI<FencingGameInfo>("Prefabs/UI/FencingGameInfo");
+        yield return new WaitForSeconds(0.2f);
+        GameManager.UI.CloseWindowUI(this);
+    }
+
+    IEnumerator FlappyBirdLodingRountine()
+    {
+        yield return new WaitForSeconds(0.3f);
+        GameManager.UI.ShowWindowUI<FlappyBirdGameInfo>("Prefabs/UI/FlappyBirdGameInfo");
         yield return new WaitForSeconds(0.2f);
         GameManager.UI.CloseWindowUI(this);
     }
