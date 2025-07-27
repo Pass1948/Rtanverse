@@ -8,7 +8,6 @@ public class LockAtRepier : MonoBehaviour
 
     [SerializeField] float angle =135f;
 
-    private Vector2 dirVec;
     private Vector2 mouseDir;
     Rigidbody2D rb;
 
@@ -23,7 +22,6 @@ public class LockAtRepier : MonoBehaviour
         LookTarget();
     }
 
-
     void LookTarget()
     {
         mouseDir = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -31,8 +29,4 @@ public class LockAtRepier : MonoBehaviour
         float aimAngle = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg - angle;
         transform.rotation = Quaternion.AngleAxis(aimAngle, Vector3.forward);
     }
-
-
-
-
 }

@@ -73,4 +73,13 @@ public class GameManager : MonoBehaviour
         uiObj.transform.parent = transform;
         uiManager = uiObj.AddComponent<UIManager>();
     }
+
+
+
+    void Timer()
+    {
+
+    }
+
+
 }
