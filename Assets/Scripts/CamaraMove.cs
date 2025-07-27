@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class CamaraMove : MonoBehaviour
 {
-    [SerializeField] Transform player;
     [SerializeField] float followSpeed;
+
+   public GameObject player { get; set; }
 
     Vector3 offset;
     Vector3 targetPos;
 
     void Start()
     {
-         transform.position = new Vector3(player.position.x, player.position.y, -10);
+        player = GameObject.FindGameObjectWithTag("Player");
+        transform.position = new Vector3(player.transform.position.x, player.transform.position.y, -10);  // 케릭터 오브젝트 변경될시 위치 변환
         offset = transform.position - player.transform.position;
     }
 

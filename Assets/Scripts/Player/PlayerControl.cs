@@ -8,6 +8,7 @@ using UnityEngine.UI;
 
 public class PlayerControl : MonoBehaviour
 {
+
     [Header("플레이어 이동속도")]
     [SerializeField] float speed;
 
@@ -34,9 +35,6 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] Transform shadow;
     [SerializeField] Transform rayPoint;
 
-    [Header("Raycast길이")]
-    [SerializeField] float rayLangth;
-
     [Header("버튼 UI")]
     [SerializeField] GameObject buttenUI;
 
@@ -54,19 +52,23 @@ public class PlayerControl : MonoBehaviour
     //====[Dash]====
     bool canDash = true;
     float activeSpeed;
+    public float _activeSpeed { get => activeSpeed; set => activeSpeed = value; }
 
     //====[All]====
     private Rigidbody2D rd;
 
     private Vector2 moveDir;
 
-    private Vector3 dirVec;
-
-    GameObject scanOdj;
+    IInteractable currentTarget;
 
     private void Awake()
     {
         rd = GetComponent<Rigidbody2D>();
+    }
+
+    private void OnEnable()
+    {
+        activeSpeed = speed;
     }
 
     private void Start()
@@ -81,13 +83,11 @@ public class PlayerControl : MonoBehaviour
 
     private void Update()
     {
-        DrawRay();
         JumpHandling();
     }
 
     //=======================[InputSystem]=======================
     // InputAction에 등록된 이름과 함수이름이 같은지 확인(작성법 : On+커멘드이름)
-
 
     void OnMove(InputValue value)
     {
@@ -102,11 +102,11 @@ public class PlayerControl : MonoBehaviour
 
     void OnInteract()
     {
-        Debug.Log($"이것은 {scanOdj.name}");
-        if (scanOdj = null)
-        {
-            Debug.Log($"이것은 없습니다");
-        }
+        if (buttenUI.activeSelf == false) return;
+        buttenUI.gameObject.GetComponent<Button>().onClick.Invoke();
+        if(currentTarget == null) return;
+        activeSpeed = 0f;
+        currentTarget.Interact();
     }
 
     void OnSprint()
@@ -120,7 +120,7 @@ public class PlayerControl : MonoBehaviour
     {
         moveDir.Normalize();
         BodyDir();
-        rd.velocity = moveDir * speed;  // 플레이어 이동 함수(.velocity
+        rd.velocity = moveDir * activeSpeed;  // 플레이어 이동 함수(.velocity
     }
 
     // 플레이어 반향 전환 관련 로직
@@ -129,27 +129,23 @@ public class PlayerControl : MonoBehaviour
         // 오른쪽
         if (moveDir.x > 0)
         {
-            dirVec = Vector3.right;
             spriteRenderer.sprite = sRender;
             spriteRenderer.flipX = true;
         }
         // 왼쪽
         else if (moveDir.x < 0)
         {
-            dirVec = Vector3.left;
             spriteRenderer.sprite = sRender;
             spriteRenderer.flipX = false;
         }
         // 위
         if (moveDir.y > 0)
         {
-            dirVec = Vector3.up;
             spriteRenderer.sprite = bRender;
         }
         // 아래
         else if (moveDir.y < 0)
         {
-            dirVec = Vector3.down;
             spriteRenderer.sprite = fRender;
         }
     }
@@ -190,31 +186,24 @@ public class PlayerControl : MonoBehaviour
         }
     }
 
-    //=======================[Interaction RayCast]=======================
-    private void OnDrawGizmos()
+    //=======================[Interaction Trigger]=======================
+
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(rayPoint.position, rayLangth);
-    }
-
-    void DrawRay()
-    {
-        Debug.DrawRay(rayPoint.position, dirVec * rayLangth, new Color(0, 1, 0));
-        RaycastHit2D rayHit = Physics2D.Raycast(rayPoint.position, dirVec, rayLangth, LayerMask.GetMask("Object"));
-
-        Collider2D hit = Physics2D.OverlapCircle(rayPoint.position, rayLangth, LayerMask.GetMask("Object"));
-
-        if (hit != null)
+        if (collision.gameObject.CompareTag("Object"))
         {
-            scanOdj = hit.gameObject;
+            currentTarget = collision.GetComponent<IInteractable>();
             buttenUI.SetActive(true);
         }
-        else
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Object"))
         {
-            scanOdj = null;
+            currentTarget = null;
             buttenUI.SetActive(false);
         }
-
     }
     //=======================[Dash]=======================
 
@@ -227,11 +216,10 @@ public class PlayerControl : MonoBehaviour
     IEnumerator DashCorutine()
     {
         canDash = false;
-        speed = dashSpeed;
+        activeSpeed = dashSpeed;
         yield return new WaitForSeconds(dashDuration);
-        speed = activeSpeed;
+        activeSpeed = speed;
         yield return new WaitForSeconds(dashCoolDown);
         canDash = true;
     }
-
 }

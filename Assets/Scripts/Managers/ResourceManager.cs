@@ -21,70 +21,75 @@ public class ResourceManager : MonoBehaviour
         return resource;
     }
 
-    public T Instantiate<T>(T original, Vector2 position, Quaternion rotation, Transform parent) where T : Object
+    public T Instantiate<T>(T original, Vector3 position, Quaternion rotation, Transform parent, bool pooling = false) where T : Object
     {
-        Vector3 pos3D = new Vector3(position.x, position.y, 0f);                // 2D 게임에서는 Z축을 0으로 설정
-        return Object.Instantiate(original, pos3D, rotation, parent);
+        if (pooling)
+            return GameManager.Pool.Get(original, position, rotation, parent);
+        else
+            return Object.Instantiate(original, position, rotation, parent);
     }
 
-    //Vector2 위치와 Quaternion 회전만 지정
-    public T Instantiate<T>(T original, Vector2 position, Quaternion rotation) where T : Object
+    public T Instantiate<T>(T original, Vector3 position, Quaternion rotation, bool pooling = false) where T : Object
     {
-        return Instantiate<T>(original, position, rotation, null);
+        return Instantiate<T>(original, position, rotation, null, pooling);
     }
 
-
-    // 부모 Transform만 지정
-    public new T Instantiate<T>(T original, Transform parent) where T : Object
+    public new T Instantiate<T>(T original, Transform parent, bool pooling = false) where T : Object
     {
-        return Instantiate<T>(original, Vector2.zero, Quaternion.identity, parent);
+        return Instantiate<T>(original, Vector3.zero, Quaternion.identity, parent, pooling);
     }
-    // 부모 Transform 없이 기본 위치와 회전으로 생성
-    public T Instantiate<T>(T original) where T : Object
+
+    public T Instantiate<T>(T original, bool pooling = false) where T : Object
     {
-        return Instantiate<T>(original, Vector2.zero, Quaternion.identity, null);
+        return Instantiate<T>(original, Vector3.zero, Quaternion.identity, null, pooling);
     }
 
     // 경로(path)에 따라 오브젝트를 생성하는 기능
-    public T Instantiate<T>(string path, Vector2 position, Quaternion rotation, Transform parent) where T : Object
+    public T Instantiate<T>(string path, Vector3 position, Quaternion rotation, Transform parent, bool pooling = false) where T : Object
     {
         T original = Load<T>(path);
-        return Instantiate<T>(original, position, rotation, parent);
+        return Instantiate<T>(original, position, rotation, parent, pooling);
     }
-    // 경로와 Vector2 위치, 회전만 지정
-    public T Instantiate<T>(string path, Vector2 position, Quaternion rotation) where T : Object
+
+    public T Instantiate<T>(string path, Vector3 position, Quaternion rotation, bool pooling = false) where T : Object
     {
-        return Instantiate<T>(path, position, rotation, null);
+        return Instantiate<T>(path, position, rotation, null, pooling);
     }
-    // 경로와 부모 Transform만 지정
-    public T Instantiate<T>(string path, Transform parent) where T : Object
+
+    public T Instantiate<T>(string path, Transform parent, bool pooling = false) where T : Object
     {
-        return Instantiate<T>(path, Vector2.zero, Quaternion.identity, parent);
+        return Instantiate<T>(path, Vector3.zero, Quaternion.identity, parent, pooling);
     }
-    // 경로만 지정하고 기본 위치와 회전으로 생성
-    public T Instantiate<T>(string path) where T : Object
+
+    public T Instantiate<T>(string path, bool pooling = false) where T : Object
     {
-        return Instantiate<T>(path, Vector2.zero, Quaternion.identity, null);
+        return Instantiate<T>(path, Vector3.zero, Quaternion.identity, null, pooling);
     }
 
     public void Destroy(GameObject go)
     {
+        if (GameManager.Pool.IsContain(go))
+            GameManager.Pool.Release(go);
+        else
             GameObject.Destroy(go);
     }
 
     public void Destroy(GameObject go, float delay)
     {
+        if (GameManager.Pool.IsContain(go))
+            StartCoroutine(DelayReleaseRoutine(go, delay));
+        else
             GameObject.Destroy(go, delay);
     }
 
-    public void Destroy(Component component)
+    IEnumerator DelayReleaseRoutine(GameObject go, float delay)
     {
-        Component.Destroy(component);
+        yield return new WaitForSeconds(delay);
+        GameManager.Pool.Release(go);
     }
 
     public void Destroy(Component component, float delay = 0f)
     {
         Component.Destroy(component, delay);
     }
-
 }

@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Repier
   - Mokujin
+  - Object
+  - FencingCheckPoint
   layers:
   - Default
   - TransparentFX

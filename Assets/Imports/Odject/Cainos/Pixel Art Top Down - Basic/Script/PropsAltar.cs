@@ -1,18 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 //when something get into the alta, make the runes glow
 namespace Cainos.PixelArtTopDown_Basic
 {
 
-    public class PropsAltar : MonoBehaviour
+    public class PropsAltar : MonoBehaviour, IInteractable
     {
         public List<SpriteRenderer> runes;
         public float lerpSpeed;
 
         private Color curColor;
         private Color targetColor;
+
+        public void Interact()
+        {
+            GameManager.UI.ShowWindowUI<MiniGameSelectUI>("Prefabs/UI/MiniGameSelectUI");
+        }
 
         private void Awake()
         {
@@ -21,7 +27,12 @@ namespace Cainos.PixelArtTopDown_Basic
 
         private void OnTriggerEnter2D(Collider2D other)
         {
-            targetColor.a = 1.0f;
+            if (other.gameObject.CompareTag("Player"))
+            {
+                targetColor.a = 1.0f;
+            }
+            else
+                return;
         }
 
         private void OnTriggerExit2D(Collider2D other)
