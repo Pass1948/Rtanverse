@@ -1,13 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
+using static Unity.VisualScripting.Metadata;
 
 public class MiniGameSelectUI : WindowUI
 {
-    GameObject player;
-    GameObject fencingCheckPoint;
-    Transform[] children;
+
     protected override void Awake()
     {
         base.Awake();
@@ -17,9 +16,6 @@ public class MiniGameSelectUI : WindowUI
 
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
-        fencingCheckPoint = GameObject.FindGameObjectWithTag("FencingCheckPoint");
-        children = player.GetComponentsInChildren<Transform>(true);
         buttons["FencingGameButton"].Select();
     }
 
@@ -35,25 +31,18 @@ public class MiniGameSelectUI : WindowUI
         StartCoroutine(UILodingRountine());
     }
 
-    IEnumerator FencingSelectLodingRountine()
-    {
-        yield return new WaitForSeconds(0.5f);
-        foreach (Transform child in children)
-        {
-            if (child.name == "Front")
-            {
-                child.gameObject.SetActive(true);
-                break;
-            }
-        }
-        player.GetComponent<PlayerControl>().enabled = false;
-        player.GetComponent<SpearControl>().enabled = true;
-        GameManager.UI.CloseWindowUI(this);
-        player.transform.position = fencingCheckPoint.transform.position;
-    }
+
     IEnumerator UILodingRountine()
     {
         yield return new WaitForSeconds(0.5f);
+        GameManager.UI.CloseWindowUI(this);
+    }
+
+    IEnumerator FencingSelectLodingRountine()
+    {
+        yield return new WaitForSeconds(0.3f);
+        GameManager.UI.ShowWindowUI<FencingGameInfo>("Prefabs/UI/FencingGameInfo");
+        yield return new WaitForSeconds(0.2f);
         GameManager.UI.CloseWindowUI(this);
     }
 }

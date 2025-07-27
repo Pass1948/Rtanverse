@@ -65,10 +65,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Back
+  m_text: "\uB4A4\uB85C\uAC00\uAE30"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 2dc29be04a5cc8b4ea5342542f1d9360, type: 2}
-  m_sharedMaterial: {fileID: -5771118363196418262, guid: 2dc29be04a5cc8b4ea5342542f1d9360,
+  m_fontAsset: {fileID: 11400000, guid: a6671efc54919b048aa1bd72d84a565b, type: 2}
+  m_sharedMaterial: {fileID: -3545410386543910027, guid: a6671efc54919b048aa1bd72d84a565b,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -93,8 +93,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 52
-  m_fontSizeBase: 52
+  m_fontSize: 60
+  m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -407,7 +407,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ab8d473e45377b4dad397d669871f7d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rapier: {fileID: 0}
 --- !u!222 &2169202327234423644
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -765,10 +764,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Fencing
+  m_text: "\uD39C\uC2F1 \uAC8C\uC784"
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 2dc29be04a5cc8b4ea5342542f1d9360, type: 2}
-  m_sharedMaterial: {fileID: -5771118363196418262, guid: 2dc29be04a5cc8b4ea5342542f1d9360,
+  m_fontAsset: {fileID: 11400000, guid: a6671efc54919b048aa1bd72d84a565b, type: 2}
+  m_sharedMaterial: {fileID: -3545410386543910027, guid: a6671efc54919b048aa1bd72d84a565b,
     type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
@@ -793,8 +792,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 52
-  m_fontSizeBase: 52
+  m_fontSize: 60
+  m_fontSizeBase: 60
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
