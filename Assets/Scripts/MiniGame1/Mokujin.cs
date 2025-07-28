@@ -8,7 +8,7 @@ public class Mokujin : MonoBehaviour
     {
         if (collision.CompareTag("Mokujin"))
         {
-            GameManager.Data.AddScore(1);
+            GameManager.Data.FencingAddScore(1);
         }
     }
 }

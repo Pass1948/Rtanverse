@@ -104,6 +104,7 @@ public class PlayerControl : MonoBehaviour
     {
         if (buttenUI.activeSelf == false) return;
         buttenUI.gameObject.GetComponent<Button>().onClick.Invoke();
+
         if(currentTarget == null) return;
         activeSpeed = 0f;
         currentTarget.Interact();

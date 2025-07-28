@@ -35,6 +35,7 @@ public class FencingGameInfo : WindowUI
     IEnumerator UILodingRountine()
     {
         yield return new WaitForSeconds(0.5f);
+        player.GetComponent<PlayerControl>()._activeSpeed = 5f;
         GameManager.UI.CloseWindowUI(this);
     }
 

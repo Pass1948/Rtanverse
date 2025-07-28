@@ -12,6 +12,8 @@ TagManager:
   - Obstacles
   - BackGround
   - JumpStartPoint
+  - BgLooper
+  - MiniGame2
   layers:
   - Default
   - TransparentFX

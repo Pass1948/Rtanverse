@@ -41,7 +41,7 @@ public class PopUpTimer : PopUpUI
             {
                 time -= Time.deltaTime;
                 text_time.text = (time).ToString("N2");
-                score.text = (GameManager.Data.currentScore).ToString();
+                score.text = (GameManager.Data.currentFencingScore).ToString();
             }
 
             else   // TimeOut
@@ -57,7 +57,7 @@ public class PopUpTimer : PopUpUI
 
     IEnumerator StartRoutine()
     {
-        GameManager.Data.currentScore = 0;
+        GameManager.Data.currentFencingScore = 0;
         count.gameObject.SetActive(true);
         time = inPutTime;
         count.text = "3";

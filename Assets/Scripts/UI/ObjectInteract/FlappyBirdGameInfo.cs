@@ -6,26 +6,24 @@ public class FlappyBirdGameInfo : WindowUI
 {
 
     GameObject player;
-    GameObject fencingCheckPoint;
-    Transform[] children;
+    GameObject jumpStartPoint;
     protected override void Awake()
     {
         base.Awake();
-        buttons["StartButton"].onClick.AddListener(() => { FencingSelect(); });
+        buttons["StartButton"].onClick.AddListener(() => { FlappyBirdSelect(); });
         buttons["CancelButton"].onClick.AddListener(() => { Back(); });
     }
 
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        fencingCheckPoint = GameObject.FindGameObjectWithTag("FencingCheckPoint");
-        children = player.GetComponentsInChildren<Transform>(true);
+        jumpStartPoint = GameObject.FindGameObjectWithTag("JumpStartPoint");
     }
 
-    public void FencingSelect()
+    public void FlappyBirdSelect()
     {
-        Debug.Log("펜싱게임 시작");
-        StartCoroutine(FencingSelectLodingRountine());
+        Debug.Log("플래피 버드게임 시작");
+        StartCoroutine(FlappyBirdSelectLodingRountine());
     }
 
     public void Back()
@@ -36,24 +34,16 @@ public class FlappyBirdGameInfo : WindowUI
     IEnumerator UILodingRountine()
     {
         yield return new WaitForSeconds(0.5f);
+        player.GetComponent<PlayerControl>()._activeSpeed = 5f;
         GameManager.UI.CloseWindowUI(this);
     }
 
-    IEnumerator FencingSelectLodingRountine()
+    IEnumerator FlappyBirdSelectLodingRountine()
     {
         yield return new WaitForSeconds(0.5f);
-        foreach (Transform child in children)
-        {
-            if (child.name == "Front")
-            {
-                child.gameObject.SetActive(true);
-                break;
-            }
-        }
         player.GetComponent<PlayerControl>().enabled = false;
-        player.transform.position = fencingCheckPoint.transform.position;
-        GameManager.UI.ShowPopUpUI<PopUpTimer>("Prefabs/UI/TimerAndScoreUI");
+        player.transform.position = jumpStartPoint.transform.position;
+        GameManager.UI.ShowPopUpUI<PopUpJumpScoreUI>("Prefabs/UI/JumpScoreUI");
         GameManager.UI.CloseWindowUI(this);
     }
-
 }

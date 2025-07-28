@@ -6,10 +6,11 @@ public class BgLooper : MonoBehaviour
 {
     [SerializeField] int numBgCount = 5;
     [SerializeField] int obstacleCount = 0;
-    [SerializeField] Vector3 obstacleLastPosition = Vector3.zero;
+    [SerializeField] Vector3 obstacleLastPosition;
 
-    private void Start()
+    private void OnEnable()
     {
+        obstacleLastPosition = Vector3.zero;
         Obstacle[] obstacles = GameObject.FindObjectsOfType<Obstacle>();
         obstacleLastPosition = obstacles[0].transform.position;
         obstacleCount = obstacles.Length;
@@ -22,7 +23,6 @@ public class BgLooper : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-
         if (collision.CompareTag("BackGround"))
         {
             float widthOfBgObject = ((BoxCollider2D)collision).size.x;
@@ -39,7 +39,4 @@ public class BgLooper : MonoBehaviour
             obstacleLastPosition = obstacles.SetRandomPlace(obstacleLastPosition, obstacleCount);
         }
     }
-
-
-
 }

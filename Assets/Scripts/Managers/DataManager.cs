@@ -5,26 +5,49 @@ using UnityEngine;
 
 public class DataManager : MonoBehaviour
 {
-    public int currentScore = 0;
+    public int currentFencingScore = 0;
+    public int currentBirdScore = 0;
 
-    public List<int> topScores = new List<int>();
+    public List<int> fencingTopScores = new List<int>();
+    public List<int> birdTopScores = new List<int>();
 
-    public void AddScore(int score)
+    // 허수아비 치기
+    public void FencingAddScore(int score)
     {
-        currentScore += score;
-        Debug.Log("Score: " + currentScore);
+        currentFencingScore += score;
+        Debug.Log("Score: " + currentFencingScore);
     }
-    public void SaveRoundScore(int roundScore)
+
+    public void FencingRoundScore(int roundScore)
     {
-        topScores.Add(roundScore);
+        fencingTopScores.Add(roundScore);
 
         // 점수 내림차순 정렬
-        topScores = topScores.OrderByDescending(score => score).ToList();       //OrderByDescending : 특정요소 기준으로 정렬하기 위해 사용
+        fencingTopScores = fencingTopScores.OrderByDescending(score => score).ToList();       //OrderByDescending : 특정요소 기준으로 정렬하기 위해 사용
 
         // 5위 까지만 저장
-        if (topScores.Count > 5)
+        if (fencingTopScores.Count > 5)
         {
-            topScores.RemoveAt(topScores.Count - 1);
+            fencingTopScores.RemoveAt(fencingTopScores.Count - 1);
+        }
+    }
+
+    // 플래피 버드
+    public void BirdAddScore(int score)
+    {
+        currentBirdScore += score;
+        Debug.Log("Score: " + currentBirdScore);
+    }
+
+    public void BirdRoundScore(int roundScore)
+    {
+        birdTopScores.Add(roundScore);
+
+        birdTopScores = birdTopScores.OrderByDescending(score => score).ToList();       //OrderByDescending : 특정요소 기준으로 정렬하기 위해 사용
+
+        if (birdTopScores.Count > 5)
+        {
+            birdTopScores.RemoveAt(birdTopScores.Count - 1);
         }
     }
 }
