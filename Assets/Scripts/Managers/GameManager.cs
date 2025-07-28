@@ -26,6 +26,9 @@ public class GameManager : MonoBehaviour
     private static UIManager uiManager;
     public static UIManager UI { get { return uiManager; } }
 
+    private static Soundmanager soundmanager;
+    public static Soundmanager Sound { get { return soundmanager; } }
+
 
     private void Awake()
     {
@@ -72,14 +75,11 @@ public class GameManager : MonoBehaviour
         uiObj.name = "UIManager";
         uiObj.transform.parent = transform;
         uiManager = uiObj.AddComponent<UIManager>();
+
+        GameObject soundObj = new GameObject();
+        soundObj.name = "Soundmanager";
+        soundObj.transform.parent = transform;
+        soundmanager = soundObj.AddComponent<Soundmanager>();
     }
-
-
-
-    void Timer()
-    {
-
-    }
-
 
 }
