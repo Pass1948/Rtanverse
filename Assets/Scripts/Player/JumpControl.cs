@@ -23,6 +23,7 @@ public class JumpControl : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (isDead == true) return;
         MoveFowerd();
     }
 
@@ -35,13 +36,6 @@ public class JumpControl : MonoBehaviour
 
     void MoveFowerd()
     {
-        if (isDead == true) 
-        {
-            rd.velocity = Vector3.zero;
-            return;
-        }
-        else
-        {
             Vector3 vector3 = rd.velocity;
             vector3.x = forwardSpeed;
             if (isFlap == true)
@@ -50,10 +44,8 @@ public class JumpControl : MonoBehaviour
                 isFlap = false;
             }
             rd.velocity = vector3;
-
             float angle = Mathf.Clamp((rd.velocity.y * 10f), -90, 90);
             transform.rotation = Quaternion.Euler(0, 0, 0);
-        }
     }
 
     void Jump(float jumpPower)
@@ -70,15 +62,12 @@ public class JumpControl : MonoBehaviour
         {
             if (isDead == true)
                 return;
-            else
-            {
                 Debug.Log("Á×À½");
                 isDead = true;
                 rd.gravityScale = 0f;
                 this.enabled = false;
                 GameManager.UI.ClosePopUpUI();
                 GameManager.UI.ShowPopUpUI<BirdScoreBoardUI>("Prefabs/UI/BirdScoreBoardUI");
-            }
         }
     }
 }

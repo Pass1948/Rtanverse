@@ -23,6 +23,17 @@ public class PopUpJumpScoreUI : PopUpUI
 
     private void OnEnable()
     {
+        if (prfab == null)
+        {
+            Debug.Log("霉积己凳");
+            prfab = GameManager.Resource.Instantiate(jumpOdj, jumpParent);
+        }
+        else
+        {
+            GameObject.Destroy(prfab);
+            prfab = GameManager.Resource.Instantiate(jumpOdj, jumpParent);
+            Debug.Log("肚积己凳");
+        }
         StartCoroutine(StartRoutine());
     }
 
@@ -32,16 +43,6 @@ public class PopUpJumpScoreUI : PopUpUI
         bgLooper = GameObject.FindGameObjectWithTag("BgLooper");
         miniGame2 = GameObject.FindGameObjectWithTag("MiniGame2");
         jumpParent = miniGame2.transform;
-        if (prfab == null)
-        {
-            Debug.Log("肚积己凳");
-            prfab = GameManager.Resource.Instantiate(jumpOdj, jumpParent);
-        }
-        else
-        {
-            GameObject.Destroy(prfab);
-            prfab = GameManager.Resource.Instantiate(jumpOdj, jumpParent);
-        }
     }
 
     private void Update()
@@ -61,11 +62,11 @@ public class PopUpJumpScoreUI : PopUpUI
         count.text = "1";
         yield return new WaitForSeconds(1f);
         count.text = "START";
-        yield return new WaitForSeconds(1f);
         bgLooper.GetComponent<BgLooper>().enabled = true;
+        yield return new WaitForSeconds(1f);
+        player.GetComponent<Rigidbody2D>().gravityScale = 1.5f;
         player.GetComponent<JumpControl>().enabled = true;
         yield return new WaitForSeconds(0.5f);
-        player.GetComponent<Rigidbody2D>().gravityScale = 1.5f;
         count.gameObject.SetActive(false);
     }
 }
