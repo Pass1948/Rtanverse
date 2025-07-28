@@ -9,7 +9,7 @@ public class FinScoreBoardUI : PopUpUI
     [SerializeField] TMP_Text score;// 점수표시
 
     GameObject player;
-    GameObject jumpStartPoint;
+    GameObject fencingCheckPoint;
     GameObject reStratPoint;
     Transform[] children;
     private List<TMP_Text> rankTexts = new List<TMP_Text>();
@@ -34,7 +34,7 @@ public class FinScoreBoardUI : PopUpUI
     private void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player");
-        jumpStartPoint = GameObject.FindGameObjectWithTag("JumpStartPoint");
+        fencingCheckPoint = GameObject.FindGameObjectWithTag("FencingCheckPoint");
         reStratPoint = GameObject.FindGameObjectWithTag("ReStartPoint");
         children = player.GetComponentsInChildren<Transform>(true);
     }
@@ -98,6 +98,6 @@ public class FinScoreBoardUI : PopUpUI
         player.GetComponent<SpearControl>().enabled = false;
         GameManager.UI.ClosePopUpUI();
         GameManager.UI.ShowPopUpUI<PopUpTimer>("Prefabs/UI/TimerAndScoreUI");
-        player.transform.position = jumpStartPoint.transform.position;
+        player.transform.position = fencingCheckPoint.transform.position;
     }
 }
