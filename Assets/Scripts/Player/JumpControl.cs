@@ -44,8 +44,6 @@ public class JumpControl : MonoBehaviour
                 isFlap = false;
             }
             rd.velocity = vector3;
-            float angle = Mathf.Clamp((rd.velocity.y * 10f), -90, 90);
-            transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
     void Jump(float jumpPower)
