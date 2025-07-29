@@ -5,6 +5,7 @@
 
 해당 프로젝트를 받을시 외부에셋이 없어서 제대로 실행되지 않을수도 있습니다
 그래서 외부에셋만 담은 다운로드 링크를 첨부합니다
+*외부에셋은 모두 에셋스토어의 무료에셋만 사용했습니다
 https://drive.google.com/file/d/13BUqUm974jlAJACGoEByIa78HEwy7dsz/view?usp=drive_link
 
 압축해제 경로 : 프로젝트폴더안 'Assets'폴더안에 풀어주세요
