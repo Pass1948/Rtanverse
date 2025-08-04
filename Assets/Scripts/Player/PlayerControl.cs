@@ -9,20 +9,20 @@ using UnityEngine.UI;
 public class PlayerControl : MonoBehaviour
 {
 
-    [Header("ÇÃ·¹ÀÌ¾î ÀÌµ¿¼Óµµ")]
+    [Header("í”Œë ˆì´ì–´ ì´ë™ì†ë„")]
     [SerializeField] float speed;
 
-    [Header("ÇÃ·¹ÀÌ¾î Á¡ÇÁ")]
+    [Header("í”Œë ˆì´ì–´ ì í”„")]
     [SerializeField] float jumpPower;
     [SerializeField] float gravity;
     [SerializeField] int maxJumpCount;
 
-    [Header("ÇÃ·¹ÀÌ¾î ´ë½Ã ¼¼ÆÃ")]
+    [Header("í”Œë ˆì´ì–´ ëŒ€ì‹œ ì„¤ì •")]
     [SerializeField] float dashSpeed;  //10f
     [SerializeField] float dashDuration; // 1f
     [SerializeField] float dashCoolDown; //1f
 
-    [Header("ÇÃ·¹ÀÌ¾î ÀÌ¹ÌÁö")]
+    [Header("í”Œë ˆì´ì–´ ì´ë¯¸ì§€")]
     [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] Sprite sRender;
     [SerializeField] Sprite bRender;
@@ -30,29 +30,38 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] float shadowMinSize;
     [SerializeField] float sizeSpeed;
 
-    [Header("ÇÃ·¹ÀÌ¾î À§Ä¡ ¿ÀºêÁ§Æ®")]
+    [Header("í”Œë ˆì´ì–´ ìœ„ì¹˜ íŠ¸ëœìŠ¤í¼")]
     [SerializeField] Transform body;
     [SerializeField] Transform shadow;
     [SerializeField] Transform rayPoint;
 
-    [Header("¹öÆ° UI")]
+    [Header("ë²„íŠ¼ UI")]
     [SerializeField] GameObject buttenUI;
 
+    [Header("ì´ì•Œ ë°œì‚¬ ì„¤ì •")]
+    [SerializeField] string bulletPrefabPath = "Prefabs/Bullet"; // ì´ì•Œ í”„ë¦¬íŒ¹ ê²½ë¡œ
+    [SerializeField] Transform firePoint; // ë°œì‚¬ ìœ„ì¹˜
+    [SerializeField] float bulletSpeed = 10f; // ì´ì•Œ ì†ë„
+    [SerializeField] float fireRate = 0.5f; // ë°œì‚¬ ê°„ê²©
+    [SerializeField] float bulletLifetime = 3f; // ì´ì•Œ ìƒì¡´ ì‹œê°„
 
     //====[Jump]====
-    private int jumpCount = 0; // Á¡ÇÁ Ä«¿îÅÍ
+    private int jumpCount = 0; // ì í”„ ì¹´ìš´í„°
 
-    private float curJumpP; // Á¡ÇÁ ÆÄ¿ö
-    private float groundOffset = 0.0f;  // ¹Ù´Ú°¨Áö ±âÁØ¼öÄ¡
+    private float curJumpP; // í˜„ì¬ ì í”„
+    private float groundOffset = 0.0f;  // ê·¸ë¦¼ìë¡œë¶€í„° ìœ„ì¹˜
 
     private bool isMinSize = false;
-    private bool isGround = true; // Á¡ÇÁ °¡´É »óÅÂ
-
+    private bool isGround = true; // ë•… ì°©ì§€ ìƒíƒœ
 
     //====[Dash]====
     bool canDash = true;
     float activeSpeed;
     public float _activeSpeed { get => activeSpeed; set => activeSpeed = value; }
+
+    //====[Shooting]====
+    private bool canFire = true;
+    private float lastFireTime = 0f;
 
     //====[All]====
     private Rigidbody2D rd;
@@ -87,7 +96,7 @@ public class PlayerControl : MonoBehaviour
     }
 
     //=======================[InputSystem]=======================
-    // InputAction¿¡ µî·ÏµÈ ÀÌ¸§°ú ÇÔ¼öÀÌ¸§ÀÌ °°ÀºÁö È®ÀÎ(ÀÛ¼º¹ı : On+Ä¿¸àµåÀÌ¸§)
+    // InputActionì— ì—°ê²°ëœ í•¨ìˆ˜ì´ë¦„ê³¼ í•¨ìˆ˜ì´ë¦„ì„ ì¼ì¹˜ì‹œì¼œì•¼ í•¨(ì‘ì„±ë²• : On+ì•¡ì…˜ì´ë¦„)
 
     void OnMove(InputValue value)
     {
@@ -115,36 +124,40 @@ public class PlayerControl : MonoBehaviour
         Dash();
     }
 
+    void OnAttack()
+    {
+        Fire();
+    }
 
     //=======================[Move]=======================
     void Move()
     {
         moveDir.Normalize();
         BodyDir();
-        rd.velocity = moveDir * activeSpeed;  // ÇÃ·¹ÀÌ¾î ÀÌµ¿ ÇÔ¼ö(.velocity
+        rd.velocity = moveDir * activeSpeed;  // í”Œë ˆì´ì–´ ì´ë™ í•¨ìˆ˜(.velocity
     }
 
-    // ÇÃ·¹ÀÌ¾î ¹İÇâ ÀüÈ¯ °ü·Ã ·ÎÁ÷
+    // í”Œë ˆì´ì–´ ë°©í–¥ ì „í™˜ ë° ì´ë¯¸ì§€ ë³€ê²½
     void BodyDir()
     {
-        // ¿À¸¥ÂÊ
+        // ì˜¤ë¥¸ìª½
         if (moveDir.x > 0)
         {
             spriteRenderer.sprite = sRender;
             spriteRenderer.flipX = true;
         }
-        // ¿ŞÂÊ
+        // ì™¼ìª½
         else if (moveDir.x < 0)
         {
             spriteRenderer.sprite = sRender;
             spriteRenderer.flipX = false;
         }
-        // À§
+        // ìœ„
         if (moveDir.y > 0)
         {
             spriteRenderer.sprite = bRender;
         }
-        // ¾Æ·¡
+        // ì•„ë˜
         else if (moveDir.y < 0)
         {
             spriteRenderer.sprite = fRender;
@@ -206,6 +219,7 @@ public class PlayerControl : MonoBehaviour
             buttenUI.SetActive(false);
         }
     }
+    
     //=======================[Dash]=======================
 
     void Dash()
@@ -222,5 +236,53 @@ public class PlayerControl : MonoBehaviour
         activeSpeed = speed;
         yield return new WaitForSeconds(dashCoolDown);
         canDash = true;
+    }
+
+    //=======================[Shooting]=======================
+
+    void Fire()
+    {
+        if (!canFire || Time.time - lastFireTime < fireRate) return;
+
+        // ì´ì•Œ ìƒì„± (ResourceManager ì‚¬ìš©)
+        if (firePoint != null)
+        {
+            GameObject bullet = GameManager.Resource.Instantiate<GameObject>(bulletPrefabPath, firePoint.position, firePoint.rotation, true);
+            
+            // ì´ì•Œ ë°©í–¥ ì„¤ì • (í”Œë ˆì´ì–´ê°€ ë°”ë¼ë³´ëŠ” ë°©í–¥)
+            Vector2 fireDirection = GetFireDirection();
+            
+            // ì´ì•Œì— ì†ë„ ì ìš©
+            Rigidbody2D bulletRb = bullet.GetComponent<Rigidbody2D>();
+            if (bulletRb != null)
+            {
+                bulletRb.velocity = fireDirection * bulletSpeed;
+            }
+
+            // ì´ì•Œ ë°œì‚¬ ì´ë²¤íŠ¸ ë°œìƒ
+            EventManager.ExecuteEvent(new BulletFiredEvent(firePoint.position, fireDirection, bulletSpeed));
+
+            // ì´ì•Œ ìë™ ì‚­ì œ (ResourceManager ì‚¬ìš©)
+            GameManager.Resource.Destroy(bullet, bulletLifetime);
+        }
+
+        lastFireTime = Time.time;
+    }
+
+    Vector2 GetFireDirection()
+    {
+        // í”Œë ˆì´ì–´ê°€ ë°”ë¼ë³´ëŠ” ë°©í–¥ì— ë”°ë¼ ë°œì‚¬ ë°©í–¥ ê²°ì •
+        if (spriteRenderer.sprite == bRender) // ìœ„ìª½ì„ ë°”ë¼ë³´ê³  ìˆì„ ë•Œ
+        {
+            return Vector2.up;
+        }
+        else if (spriteRenderer.sprite == fRender) // ì•„ë˜ìª½ì„ ë°”ë¼ë³´ê³  ìˆì„ ë•Œ
+        {
+            return Vector2.down;
+        }
+        else // ì¢Œìš° ë°©í–¥
+        {
+            return spriteRenderer.flipX ? Vector2.right : Vector2.left;
+        }
     }
 }
